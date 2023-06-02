@@ -6,7 +6,8 @@ import { setUserRespone } from '../actions/quizActions'
 enum STEPS {
     'START',
     'QUESTIONS',
-    'ENDQUIZ'
+    'ENDQUIZ',
+    'REVIEW'
 }
 
 const shuffle = (arr: Question[]) => {

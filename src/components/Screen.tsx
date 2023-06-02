@@ -5,10 +5,12 @@ import { useEffect, useState } from "react"
 import { QuestionsScreen } from "./QuestionsScreen"
 import axios from 'axios'
 import { CompleteScreen } from "./CompleteScreen"
+import { ReviewQuestionScreen } from "./ReviewQuestionScreen"
 enum STEPS {
     'START',
     'QUESTIONS',
-    'ENDQUIZ'
+    'ENDQUIZ',
+    'REVIEW'
 }
 export const Screen = () => {
 
@@ -25,8 +27,10 @@ export const Screen = () => {
     }
 
     const onPlayAgain = () => {
+        setStartDisable(true)
         dispatch(playAgain())
         setCurrentStep(STEPS.START)
+        getNewQuiz()
     }
 
     const getNewQuiz = () => {
@@ -43,7 +47,7 @@ export const Screen = () => {
 
     let body = (
         <div className="flex items-center justify-center flex-col gap-4">
-            <img alt="img" src="./robot.png" />
+            <img alt="img" src={`${process.env.PUBLIC_URL}/robot.png`} />
             <Button text="Start" color onClick={onStartQuiz} disable={startDisable} />
         </div>
     )
@@ -58,8 +62,12 @@ export const Screen = () => {
 
     if (currentStep === STEPS.ENDQUIZ) {
         body = (
-            <CompleteScreen action={onPlayAgain} />
+            <CompleteScreen action={onPlayAgain} secondaryAction={() => setCurrentStep(STEPS.REVIEW)} />
         )
+    }
+
+    if (currentStep === STEPS.REVIEW) {
+        body = <ReviewQuestionScreen action={onPlayAgain} onClose={() => setCurrentStep(STEPS.ENDQUIZ)}/>
     }
 
     return (
